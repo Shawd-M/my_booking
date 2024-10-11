@@ -1,0 +1,240 @@
+tags:
+  - name: Booking
+    description: Endpoints pour les réservation
+
+paths:
+  '/booking/room/{id}':
+    post:
+      summary: Créer une réservation pour une chambre
+      tags: [Booking]
+      parameters:
+        - name: id
+          in: path
+          description: ID de la chambre
+          required: true
+          type: integer
+        - in: body
+          name: body
+          description: Données de réservation
+          required: true
+          schema:
+            type: object
+            properties:
+              option:
+                type: array
+                items:
+                  type: integer
+              startDate:
+                type: string
+                format: date
+                example: '2023-06-01'
+              endDate:
+                type: string
+                format: date
+                example: '2023-06-05'
+              cancel:
+                type: integer
+                example: 0
+              peopleNb:
+                type: integer
+                example: 2
+      responses:
+        '200':
+          description: Création réussie
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              values:
+                $ref: '#/definitions/Booking'
+        '400':
+          description: Requête invalide
+        '404':
+          description: Chambre introuvable
+        '409':
+          description: Réservation existante pour cette chambre et cette période
+
+  '/booking/':
+    get:
+      summary: Récupérer toutes les réservations
+      tags: [Booking]
+      responses:
+        '200':
+          description: Récupération réussie
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              values:
+                type: array
+                items:
+                  $ref: '#/definitions/Booking'
+  '/booking/{id}':
+    get:
+      summary: Récupérer une réservation par ID
+      tags: [Booking]
+      parameters:
+        - name: id
+          in: path
+          description: ID de la réservation
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Récupération réussie
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              values:
+                $ref: '#/definitions/Booking'
+        '404':
+          description: Réservation introuvable
+    put:
+      summary: Mettre à jour une réservation par ID
+      tags: [Booking]
+      parameters:
+        - name: id
+          in: path
+          description: ID de la réservation
+          required: true
+          type: integer
+        - in: body
+          name: body
+          description: Données de réservation mises à jour
+          required: true
+          schema:
+            $ref: '#/definitions/Booking'
+      responses:
+        '200':
+          description: Mise à jour réussie
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              values:
+                $ref: '#/definitions/Booking'
+        '404':
+          description: Réservation introuvable
+  '/booking/disable/{id}':
+    put:
+      summary: Désactiver une réservation par ID
+      tags: [Booking]
+      parameters:
+        - name: id
+          in: path
+          description: ID de la réservation
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Réservation désactivée avec succès
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              values:
+                type: boolean
+        '404':
+          description: Réservation introuvable
+  '/booking/addOption/{id}':
+    post:
+      summary: Ajouter une option à une réservation par ID
+      tags: [Booking]
+      parameters:
+        - name: id
+          in: path
+          description: ID de la réservation
+          required: true
+          type: integer
+        - in: body
+          name: body
+          description: Données de l'option à ajouter
+          required: true
+          schema:
+            type: object
+            properties:
+              option:
+                type: array
+                items:
+                  type: integer
+      responses:
+        '200':
+          description: Ajout réussi
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              values:
+                type: boolean
+        '404':
+          description: Réservation introuvable
+  '/booking/removeOption/{id}':
+    post:
+      summary: Supprimer une option d'une réservation par ID
+      tags: [Booking]
+      parameters:
+        - name: id
+          in: path
+          description: ID de la réservation
+          required: true
+          type: integer
+        - in: body
+          name: body
+          description: Données de l'option à supprimer
+          required: true
+          schema:
+            type: object
+            properties:
+              option:
+                type: array
+                items:
+                  type: integer
+      responses:
+        '200':
+          description: Suppression réussie
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              values:
+                type: boolean
+        '404':
+          description: Réservation introuvable
+definitions:
+  Booking:
+    type: object
+    properties:
+      id:
+        type: integer
+      roomId:
+        type: integer
+      startDate:
+        type: string
+        format: date
+        example: '2023-06-01'
+      endDate:
+        type: string
+        format: date
+        example: '2023-06-05'
+      cancel:
+        type: integer
+        example: 0
+      peopleNb:
+        type: integer
+        example: 2
+      createdAt:
+        type: string
+        format: date-time
+        example: '2023-05-25T10:00:00Z'
+      updatedAt:
+        type: string
+        format: date-time
+        example: '2023-05-25T12:00:00Z'

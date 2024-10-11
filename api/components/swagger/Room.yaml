@@ -1,0 +1,255 @@
+tags:
+  - name: Room
+    description: Endpoints pour la gestion des rooms
+
+paths:
+  '/hotel/{id}/room':
+    post:
+      summary: Crée une nouvelle chambre pour un hôtel
+      tags: [Room]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomCreateRequest'
+      responses:
+        '200':
+          description: Création réussie de la chambre
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomResponse'
+        '404':
+          description: Aucun hôtel trouvé avec cet ID
+
+    get:
+      summary: Récupère toutes les chambres d'un hôtel
+      tags: [Room]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Récupération réussie des chambres
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomListResponse'
+
+  '/hotel/{id}/room/{roomId}':
+    put:
+      summary: Met à jour une chambre d'un hôtel
+      tags: [Room]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomUpdateRequest'
+      responses:
+        '200':
+          description: Mise à jour réussie de la chambre
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomUpdateResponse'
+
+  '/room/{id}':
+    get:
+      summary: Récupère une chambre par ID
+      tags: [Room]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Récupération réussie de la chambre
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomResponse'
+
+components:
+  schemas:
+    RoomResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        values:
+          type: object
+          properties:
+            id:
+              type: integer
+            type:
+              type: string
+            price:
+              type: number
+              format: float
+            capacity:
+              type: integer
+            availability:
+              type: integer
+            hotelId:
+              type: integer
+            createdAt:
+              type: string
+              format: date
+            updatedAt:
+              type: string
+              format: date
+          required:
+            - id
+            - type
+            - price
+            - capacity
+            - availability
+            - hotelId
+            - createdAt
+            - updatedAt
+      example:
+        message: "La récupération a été effectuée avec succès."
+        values:
+          id: 1
+          type: "string"
+          price: 0.00
+          capacity: 0
+          availability: 1
+          hotelId: 1
+          createdAt: "2023-05-22"
+          updatedAt: "2023-05-22"
+
+    RoomCreateRequest:
+      type: object
+      properties:
+        type:
+          type: string
+        price:
+          type: number
+          format: float
+        capacity:
+          type: integer
+        availability:
+          type: integer
+      required:
+        - type
+        - price
+        - capacity
+        - availability
+      example:
+        type: "string"
+        price: 0
+        capacity: 0
+        availability: 0
+
+    RoomListResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        values:
+          type: array
+          description: Liste des chambres récupérées.
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              type:
+                type: string
+              price:
+                type: number
+                format: float
+              capacity:
+                type: integer
+              availability:
+                type: integer
+              hotelId:
+                type: integer
+              createdAt:
+                type: string
+                format: date
+              updatedAt:
+                type: string
+                format: date
+            required:
+              - id
+              - type
+              - price
+              - capacity
+              - availability
+              - hotelId
+              - createdAt
+              - updatedAt
+      example:
+        message: "La récupération a été effectuée avec succès."
+        values:
+          - id: 1
+            type: "string"
+            price: 0.00
+            capacity: 0
+            availability: 1
+            hotelId: "1"
+            updatedAt: "2023-05-22T20:35:58.275Z"
+            createdAt: "2023-05-22T20:35:58.275Z"
+          - id: 2
+            type: "string"
+            price: 0.00
+            capacity: 0
+            availability: 1
+            hotelId: "1"
+            updatedAt: "2023-05-22T20:35:58.275Z"
+            createdAt: "2023-05-22T20:35:58.275Z"
+
+    RoomUpdateRequest:
+      type: object
+      properties:
+        type:
+          type: string
+        price:
+          type: number
+          format: float
+        capacity:
+          type: integer
+        availability:
+          type: integer
+      example:
+        type: "string"
+        price: 0.00
+        capacity: 0
+        availability: 1
+
+    RoomUpdateResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        values:
+          type: boolean
+      example:
+        message: "La modification a été effectuée avec succès."
+        values: true

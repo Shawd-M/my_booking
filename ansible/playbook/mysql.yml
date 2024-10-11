@@ -1,0 +1,30 @@
+---
+- name: Dockerize MySQL
+  hosts: manager
+  become: true
+  gather_facts: no
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+
+    - name: Create MySQL container
+      shell: |
+        docker run -d \
+          --name mysql-container \
+          -p 3306:3306 \
+          -e MYSQL_ROOT_PASSWORD=root \
+          -v mysql-data:/var/lib/mysql \
+          mysql:5.7
+
+      volumes:
+        - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:

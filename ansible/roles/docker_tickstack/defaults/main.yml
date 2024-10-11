@@ -1,0 +1,14 @@
+---
+# Liste des services de la TICK Stack
+tick_services:
+  - name: influxdb
+    image: influxdb:latest
+  - name: telegraf
+    image: telegraf:latest
+  - name: chronograf
+    image: chronograf:latest
+  - name: kapacitor
+    image: kapacitor:latest
+
+# Configuration du registry Docker
+playbook_dir: "/home/theodorekim/ansible/playbook"

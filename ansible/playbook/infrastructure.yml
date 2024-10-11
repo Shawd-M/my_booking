@@ -1,0 +1,14 @@
+# - hosts: [manager, worker]
+#   become: true
+#   vars:
+#     ansible_python_interpreter: /usr/bin/python3
+#   roles:
+#     - docker_swarm
+#     - docker_registry
+
+- hosts: manager
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - docker_tickstack

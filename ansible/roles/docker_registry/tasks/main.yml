@@ -1,0 +1,28 @@
+---
+# - name: Install Docker Registry
+#   docker_container:
+#     name: registry
+#     image: registry:latest
+#     state: started
+#     pull: true
+
+- name: Install requests Python library
+  apt:
+    name: python3-requests
+    state: present
+
+- name: Create Docker Registry container
+  docker_container:
+    name: registry
+    image: registry:latest
+    state: started
+    ports:
+      - "5000:5000"
+    volumes:
+      - "/var/lib/registry:/var/lib/registry"
+
+# - name: Configure Firewall
+#   firewalld:
+#     port: "5000/tcp"
+#     permanent: yes
+#     state: enabled

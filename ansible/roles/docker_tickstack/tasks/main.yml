@@ -1,0 +1,32 @@
+---
+- name: Check if TICK Stack images are present
+  docker_image_info:
+    name: "{{ item }}"
+  register: image_info
+  loop:
+    - docker.io/influxdb
+    - docker.io/telegraf
+    - docker.io/chronograf
+    - docker.io/kapacitor
+
+- name: Pull TICK Stack images if not present
+  docker_image:
+    name: "{{ item.item }}"
+    source: pull
+  when: item.images|length == 0
+  loop: "{{ image_info.results }}"
+
+- name: Check if TICK Stack services are present
+  command: "docker service ls --filter name={{ item.name }} -q"
+  register: service_info
+  changed_when: false
+  loop:
+    - { name: influxdb, image: "docker.io/influxdb" }
+    - { name: chronograf, image: "docker.io/chronograf" }
+    - { name: kapacitor, image: "docker.io/kapacitor" }
+    - { name: telegraf, image: "docker.io/telegraf" }
+
+- name: Deploy TICK Stack containers on Swarm
+  command: "docker service create --name {{ item.item.name }} {{ item.item.image }}"
+  when: item.stdout == ""
+  loop: "{{ service_info.results }}"

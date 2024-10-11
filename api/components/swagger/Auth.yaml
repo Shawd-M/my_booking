@@ -1,0 +1,145 @@
+tags:
+  - name: Authentification
+    description: Endpoints pour l'authentification des utilisateurs
+
+paths:
+  /auth/register:
+    post:
+      summary: Inscription d'un nouvel utilisateur
+      tags: [Authentification]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        '201':
+          description: Création réussie de l'utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '409':
+          description: Erreur de conflit - l'utilisateur existe déjà ou possède déjà ce rôle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /auth/login:
+    post:
+      summary: Connexion de l'utilisateur
+      tags: [Authentification]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Erreur d'authentification - email ou mot de passe incorrect
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/me:
+    get:
+      tags:
+        - Authentification
+      security:
+        - bearerAuth: []
+      description: Récupère les infos de l'utilisateur connecté.
+      responses:
+        '200':
+          description: Succès.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: Aucun utilisateur trouvé avec ce token.
+        '500':
+          description: Une erreur s'est produite.
+
+components:
+  schemas:
+    UserRegistration:
+      type: object
+      properties:
+        firstname:
+          type: string
+          example: Theodore77#
+        lastname:
+          type: string
+          example: Theodore77#
+        password:
+          type: string
+          example: Theodore77#
+        email:
+          type: string
+          example: Theodore77@test.Test
+        phone:
+          type: string
+          example: 0102030405
+    UserResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        values:
+          $ref: '#/components/schemas/User'
+      example:
+        message: Création effectuée avec succés
+        values:
+          id: 1
+          firstname: firstname
+          lastname: lastname
+          email: email
+          phone: phone
+          password: password
+          city: null
+          country: null
+          createdAt: '2023-05-20'
+          updatedAt: '2023-05-20'
+    ErrorMessage:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: Cette email est déjà utilisé. veuillez en choisir un autre.
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: Theodore77@test.Test
+        password:
+          type: string
+          example: Theodore77#
+    LoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        token:
+          type: string
+      example:
+        message: Connexion réussie
+        token: token
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: email incorrect

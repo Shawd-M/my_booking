@@ -1,0 +1,31 @@
+---
+- name: Pull GitLab Runner Docker image
+  docker_image:
+    name: gitlab/gitlab-runner:latest
+    source: pull
+
+- name: Deploy GitLab Runner as a Docker service
+  docker_service:
+    project_name: gitlab-runner
+    definition:
+      version: '3.7'
+      services:
+        gitlab-runner:
+          image: gitlab/gitlab-runner:latest
+          restart_policy:
+            condition: any
+          volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /srv/gitlab-runner/config:/etc/gitlab-runner
+          environment:
+            - CI_SERVER_URL=localhost
+            - REGISTRATION_TOKEN=RwvPwuG36ya4rugeUFTg
+            - RUNNER_EXECUTOR=docker
+            - DOCKER_IMAGE=docker:latest
+          privileged: true
+    state: present
+  delegate_to: manager
+
+- name: Add gitlab-runner to docker group
+  become: true
+  command: usermod -aG docker gitlab-runner

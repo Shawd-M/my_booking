@@ -1,0 +1,10 @@
+---
+- name: Create Docker Registry container
+  docker_container:
+    name: registry
+    image: registry:latest
+    state: started
+    ports:
+      - "5000:5000"
+    volumes:
+      - "/var/lib/registry:/var/lib/registry"

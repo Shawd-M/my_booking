@@ -1,0 +1,39 @@
+{
+  "name": "cloud1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "run-script-os",
+    "sequelize": "npm run sequelize:api",
+    "sequelize:api": "npm run sequelize:api:migrate && npm run sequelize:api:seed:all",
+    "sequelize:api:create": "npx sequelize-cli --options-path .sequelize --env development db:create",
+    "sequelize:api:migrate": "npx sequelize-cli --options-path .sequelize --env development db:migrate",
+    "sequelize:api:migrate:undo": "npx sequelize-cli --options-path .sequelize --env development db:migrate:undo",
+    "sequelize:api:seed:all": "npx sequelize-cli --options-path .sequelize --env development db:seed:all",
+    "dev:default": "npm run sequelize && nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "joi": "^17.9.2",
+    "moment": "^2.29.4",
+    "mysql2": "^3.3.1",
+    "nodemon": "^2.0.22",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "run-script-os": "^1.1.6",
+    "sequelize": "^6.31.1",
+    "sequelize-cli": "^6.6.0",
+    "swagger-autogen": "^2.23.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.3"
+  }
+}

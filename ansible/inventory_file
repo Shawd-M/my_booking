@@ -1,0 +1,8 @@
+[manager]
+172.16.228.52 ansible_user=kim_t ansible_ssh_pass=root
+[worker]
+172.16.228.94 ansible_user=kim_t ansible_ssh_pass=root
+172.16.228.6 ansible_user=kim_t ansible_ssh_pass=root
+
+[gitlab]
+172.16.228.6 ansible_user=kim_t ansible_ssh_pass=root

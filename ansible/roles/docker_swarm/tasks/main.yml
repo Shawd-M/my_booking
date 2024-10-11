@@ -1,0 +1,33 @@
+---
+- name: Install Docker
+  apt:
+    name: docker-ce
+    state: present
+
+- name: Debug example
+  debug:
+    msg: "The value of inventory_hostname is {{ inventory_hostname }}"
+
+- name: Initialize swarm
+  become: true
+  command: docker swarm init
+  register: swarm_init
+  ignore_errors: true
+  when: inventory_hostname == groups['manager'][0] 
+  changed_when: '"Swarm initialized" in swarm_init.stdout'
+  failed_when: '"This node is already part" not in swarm_init.stderr'
+
+
+- name: Get token
+  command: docker swarm join-token worker
+  register: swarm_token
+  ignore_errors: true
+  when: inventory_hostname == groups['manager'][0]
+
+- name: Join swarm
+  command: "{{ hostvars[groups['manager'][0]]['swarm_token'].stdout_lines[2] }}"
+  register: swarm_join
+  ignore_errors: true
+  when: inventory_hostname != groups['manager'][0]
+  changed_when: '"This node joined a swarm as a worker" in swarm_join.stdout'
+  failed_when: '"This node is already part" not in swarm_join.stderr'

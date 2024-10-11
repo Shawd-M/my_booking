@@ -1,0 +1,143 @@
+tags:
+  - name: User
+    description: Endpoints pour la gestion des utilisateurs
+
+paths:
+  /user/{id}:
+    get:
+      summary: Récupère un utilisateur par son ID
+      tags: [User]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur à récupérer
+      responses:
+        '200':
+          description: Récupération réussie de l'utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: Utilisateur non trouvé avec l'ID spécifié
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /user/update/{id}:
+    put:
+      summary: Met à jour un utilisateur par son ID
+      tags: [User]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de l'utilisateur à mettre à jour
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: Modification réussie de l'utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: Utilisateur non trouvé avec l'ID spécifié
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    UserResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        values:
+          $ref: '#/components/schemas/User'
+      example:
+        message: La récupération a été effectuée avec succès.
+        values:
+          id: 1
+          firstname: firstname
+          lastname: lastname
+          email: email
+          phone: phone
+          password: password
+          city: null
+          country: null
+          createdAt: '2023-05-20'
+          updatedAt: '2023-05-20'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        password:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: Aucun utilisateur trouvé avec cet id.
+
+    UserUpdateRequest:
+      type: object
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        password:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+      example:
+        firstname: test
+        lastname: test
+        email: test@gmail.com
+        phone: '102030405'
+        password: password
+        city: null
+        country: null

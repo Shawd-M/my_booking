@@ -1,0 +1,62 @@
+- name: Install required packages
+  apt:
+    name:
+      - curl
+      - openssh-server
+      - ca-certificates
+      - postfix
+    state: present
+
+- name: Import GitLab GPG key
+  become: yes
+  apt_key:
+    url: https://packages.gitlab.com/gitlab/gitlab-ee/gpgkey
+    state: present
+
+- name: Add GitLab package repository
+  apt_repository:
+    repo: deb https://packages.gitlab.com/gitlab/gitlab-ee/ubuntu/ xenial main
+    state: present
+    filename: gitlab
+
+- name: Add GitLab package repository key
+  apt_key:
+    url: https://packages.gitlab.com/gpg.key
+    state: present
+
+- name: Install GitLab package
+  apt:
+    name: gitlab-ee
+    state: present
+
+- name: Set GitLab external URL
+  become: yes
+  lineinfile:
+    dest: /etc/gitlab/gitlab.rb
+    regexp: '^external_url'
+    line: "external_url 'http://172.16.228.6'"
+
+- name: Reconfigure GitLab
+  command: gitlab-ctl reconfigure
+
+- name: Check if GitLab user rafina_d already exists
+  command: "gitlab-rails runner \"puts User.exists?(email: 'rafina_d@etna-alternance.net')\""
+  register: user_exists1
+  changed_when: false
+
+- name: Create GitLab user rafina_d
+  command: 'gitlab-rails runner "user=User.new(email: ''rafina_d@etna-alternance.net'', username: ''rafina_d'', name: ''rafina_d'', password: ''P@SSW0RD'', password_confirmation: ''P@SSW0RD'', admin: true); user.skip_confirmation!; user.save"'
+  args:
+    chdir: /opt/gitlab/embedded/service/gitlab-rails/
+  when: not user_exists1.stdout | bool
+
+- name: Check if GitLab user rinaz_a already exists
+  command: "gitlab-rails runner \"puts User.exists?(email: 'rinaz_a@etna-alternance.net')\""
+  register: user_exists2
+  changed_when: false
+
+- name: Create GitLab user rinaz_a
+  command: 'gitlab-rails runner "user=User.new(email: ''rinaz_a@etna-alternance.net'', username: ''rinaz_a'', name: ''rinaz_a'', password: ''P@SSW0RD'', password_confirmation: ''P@SSW0RD'', admin: true); user.skip_confirmation!; user.save"'
+  args:
+    chdir: /opt/gitlab/embedded/service/gitlab-rails/
+  when: not user_exists2.stdout | bool

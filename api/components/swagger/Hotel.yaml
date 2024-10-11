@@ -1,0 +1,238 @@
+tags:
+  - name: Hotel
+    description: Endpoints pour la gestion des hotels
+
+paths:
+  '/hotel':
+    get:
+      summary: Récupère tous les hôtels
+      tags: [Hotel]
+      responses:
+        '200':
+          description: Récupération réussie des hôtels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HotelListResponse'
+
+    post:
+      summary: Crée un nouvel hôtel
+      tags: [Hotel]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HotelCreateRequest'
+      responses:
+        '200':
+          description: Création réussie de l'hôtel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HotelResponse'
+        '404':
+          description: Hôtel existe déjà
+
+  '/hotel/{id}':
+    get:
+      summary: Récupère un hôtel par ID
+      tags: [Hotel]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Récupération réussie de l'hôtel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HotelResponse'
+
+  '/hotel/update/{id}':
+    put:
+      summary: Met à jour un hôtel par ID
+      tags: [Hotel]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HotelUpdateRequest'
+      responses:
+        '200':
+          description: Mise à jour réussie de l'hôtel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HotelUpdateResponse'
+        '404':
+          description: Aucun hôtel trouvé avec cet ID
+
+components:
+  schemas:
+    HotelCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        roomNb:
+          type: integer
+      required:
+        - name
+        - address
+      example:
+        name: "string"
+        address: "string"
+        phone: "string"
+        email: "string"
+        city: "string"
+        country: "string"
+        roomNb: 0
+
+
+    HotelUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        roomNb:
+          type: integer
+      example:
+        name: "string"
+        address: "string"
+        phone: "string"
+        email: "string"
+        city: "string"
+        country: "string"
+        roomNb: 0
+
+    HotelUpdateResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        values:
+          type: boolean
+      example:
+        message: "La modification a été effectuée avec succès."
+        values: true
+
+    HotelResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        values:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            address:
+              type: string
+            phone:
+              type: string
+            email:
+              type: string
+            city:
+              type: string
+            country:
+              type: string
+            roomNb:
+              type: integer
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+      example:
+        message: "La récupération a été effectuée avec succès."
+        values:
+          id: 1
+          name: "ok"
+          address: "string"
+          phone: "string"
+          email: "string"
+          city: "string"
+          country: "string"
+          roomNb: 0
+          createdAt: "2023-05-22T00:00:00Z"
+          updatedAt: "2023-05-22T00:00:00Z"
+
+    HotelListResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        values:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              address:
+                type: string
+              phone:
+                type: string
+              email:
+                type: string
+              city:
+                type: string
+              country:
+                type: string
+              roomNb:
+                type: integer
+              createdAt:
+                type: string
+                format: date-time
+              updatedAt:
+                type: string
+                format: date-time
+      example:
+        message: La récupération a été effectuée avec succès.
+        values:
+          - id: 1
+            name: "ok"
+            address: "string"
+            phone: "string"
+            email: "string"
+            city: "string"
+            country: "string"
+            roomNb: 0
+            createdAt: "2023-05-22T00:00:00Z"
+            updatedAt: "2023-05-22T00:00:00Z"

@@ -1,0 +1,120 @@
+tags:
+  - name: Option
+    description: Endpoints pour la gestion des options
+
+paths:
+  '/option/hotel/{id}':
+    post:
+      summary: Créer une option pour un hôtel
+      tags: [Option]
+      parameters:
+        - name: id
+          in: path
+          description: ID de l'hôtel
+          required: true
+          type: integer
+        - in: body
+          name: body
+          description: Données de l'option
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+              price:
+                type: number
+              availability:
+                type: integer
+      responses:
+        '200':
+          description: Création réussie
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              values:
+                $ref: '#/definitions/Option'
+        '404':
+          description: Option existante
+
+  '/option/{id}':
+    get:
+      summary: Récupérer une option par ID
+      tags: [Option]
+      parameters:
+        - name: id
+          in: path
+          description: ID de l'option
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Récupération réussie
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              values:
+                $ref: '#/definitions/Option'
+        '404':
+          description: Option introuvable
+
+    put:
+      summary: Mettre à jour une option
+      tags: [Option]
+      parameters:
+        - name: id
+          in: path
+          description: ID de l'option
+          required: true
+          type: integer
+        - in: body
+          name: body
+          description: Données de l'option à mettre à jour
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+              price:
+                type: number
+              availability:
+                type: integer
+      responses:
+        '200':
+          description: Modification réussie
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              values:
+                $ref: '#/definitions/Option'
+        '404':
+          description: Option introuvable
+
+definitions:
+  Option:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+      price:
+        type: number
+      availability:
+        type: integer
+      hotelId:
+        type: integer
+
